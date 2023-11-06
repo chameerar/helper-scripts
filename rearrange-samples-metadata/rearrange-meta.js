@@ -15,7 +15,6 @@ function moveAndRenameIconAndYamlFile(dirPath, destinationPath) {
 
         try {
             fs.copyFileSync(iconFilePath, newIconPath);
-            console.log(`Moved and renamed 'icon.png' in directory ${dirPath} to ${newIconPath}`);
         } catch (err) {
             console.error(`Error moving and renaming 'icon.png' in directory ${dirPath}:`, err);
         }
@@ -45,19 +44,6 @@ function moveAndRenameIconAndYamlFile(dirPath, destinationPath) {
             tags: metadata.tags
         }
 
-        // if ('thumbnailPath' in metadata) {
-        //     metadata.thumbnailPath = newIconRelPath;
-        // } else {
-        //     console.log(`'thumbnailPath' key not found in directory ${dirPath}. No changes made.`);
-        // }
-
-        // if ('buildPreset' in metadata) {
-        //     metadata.buildPack = metadata.buildPreset;
-        //     delete metadata.buildPreset;
-        // } else {
-        //     console.log(`'buildPreset' key not found in directory ${dirPath}. No changes made.`);
-        // }
-
         const updatedYAML = yaml.dump(updatedYamlContent);
 
         const directoryName = path.basename(dirPath);
@@ -65,7 +51,6 @@ function moveAndRenameIconAndYamlFile(dirPath, destinationPath) {
         const newFilePath = path.join(destinationPath, newFileName);
 
         fs.writeFileSync(newFilePath, updatedYAML, 'utf8');
-        // console.log(`Updated and moved metadata.yaml from directory ${dirPath} to ${newFilePath}`);
 
     } catch (err) {
         console.error(`Error reading and modifying metadata.yaml in directory ${dirPath}:`, err);
@@ -83,10 +68,11 @@ function processDirectories(basePath, destinationPath) {
     }
     fs.readdirSync(basePath).forEach((file) => {
         const dirPath = path.join(basePath, file);
-        if (fs.statSync(dirPath).isDirectory()) {
+        if (fs.statSync(dirPath).isDirectory() && !file.startsWith('.')) {
             moveAndRenameIconAndYamlFile(dirPath, destinationPath);
         }
     });
+    console.log('Done!');
 }
 
 // Replace 'your_directory_path' with the actual path you want to scan
