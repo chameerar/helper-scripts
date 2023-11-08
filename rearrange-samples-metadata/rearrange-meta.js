@@ -14,7 +14,8 @@ function moveAndRenameIconAndYamlFile(dirPath, destinationPath) {
         newIconRelPath = '/icons/' + newFileName;
 
         try {
-            fs.copyFileSync(iconFilePath, newIconPath);
+            // fs.copyFileSync(iconFilePath, newIconPath);
+            fs.renameSync(iconFilePath, newIconPath);
         } catch (err) {
             console.error(`Error moving and renaming 'icon.png' in directory ${dirPath}:`, err);
         }
@@ -51,6 +52,7 @@ function moveAndRenameIconAndYamlFile(dirPath, destinationPath) {
         const newFilePath = path.join(destinationPath, newFileName);
 
         fs.writeFileSync(newFilePath, updatedYAML, 'utf8');
+        fs.unlinkSync(metadataFilePath);
 
     } catch (err) {
         console.error(`Error reading and modifying metadata.yaml in directory ${dirPath}:`, err);
